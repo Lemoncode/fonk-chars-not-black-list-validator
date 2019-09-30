@@ -6,9 +6,7 @@
 
 This is a [fonk](https://github.com/Lemoncode/fonk) microlibrary that brings validation capabilities to:
 
-// TODO: Update description and example.
-
-- Validate if a field of a form ....
+- Validate if a field of a form is a string that only contains valid characters (characters that are not part of a given black list)
 
 How to add it to an existing form validation schema:
 
@@ -16,18 +14,23 @@ We have the following form model:
 
 ```
 const myFormValues = {
-  product : 'shoes',
+  product: 'shoes',
   price: 20,
 }
 ```
 
-We can add a charsNotBlackList validation to the myFormValues
+We can add a charsNotBlackList validation to the myFormValues with optional matchCase argument (false by default)
 
 ```javascript
 import { charsNotBlackList } from '@lemoncode/fonk-chars-not-black-list-validator';
 
 const validationSchema = {
-  price: [charsNotBlackList.validator],
+  product: [
+    {
+      validator: charsNotBlackList.validator,
+      customArgs: { blackList: [' ', '@', 'ñ'], matchCase: false },
+    },
+  ],
 };
 ```
 
@@ -38,7 +41,9 @@ You can customize the error message displayed in two ways:
 ```javascript
 import { charsNotBlackList } from '@lemoncode/fonk-chars-not-black-list-validator';
 
-charsNotBlackList.setErrorMessage('El campo debe de ser numérico');
+charsNotBlackList.setErrorMessage(
+  'El valor no debe contener los siguientes caracteres: {{blackList}}'
+);
 ```
 
 - Locally just override the error message for this validationSchema:

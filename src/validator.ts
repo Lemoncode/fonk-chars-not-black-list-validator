@@ -3,30 +3,71 @@ import {
   parseMessageWithCustomArgs,
 } from '@lemoncode/fonk';
 
-// TODO: Add validator type
-const VALIDATOR_TYPE = '';
+const VALIDATOR_TYPE = 'CHARS_NOT_BLACK_LIST';
 
-// TODO: Add default message
-let defaultMessage = '';
+let defaultMessage =
+  'The value must be a string that not contain the following characters: {{blackList}}';
 export const setErrorMessage = message => (defaultMessage = message);
 
 const isDefined = value => value !== void 0 && value !== null && value !== '';
 
-export const validator: FieldValidationFunctionSync = fieldValidatorArgs => {
-  const { value, message = defaultMessage, customArgs } = fieldValidatorArgs;
+const validateType = value => typeof value === 'string';
 
-  // TODO: Add validator
-  const succeeded = !isDefined(value) || ...;
+const validate = ({ value, blackList }: Model) =>
+  blackList.every(char => value.indexOf(char) === -1);
+
+const mapToModel = (
+  value: string,
+  { matchCase, blackList }: CustomArgs
+): Model =>
+  !matchCase
+    ? {
+        value: value.toLowerCase().replace(/(.)(?=.*\1)/g, ''),
+        blackList: blackList.map(char => char.toLowerCase()),
+      }
+    : {
+        value: value.replace(/(.)(?=.*\1)/g, ''),
+        blackList,
+      };
+
+interface CustomArgs {
+  blackList: string[];
+  matchCase?: boolean;
+}
+
+interface Model {
+  value: string;
+  blackList: string[];
+}
+
+const defaultCustomArgs: CustomArgs = {
+  blackList: [],
+  matchCase: false,
+};
+
+export const validator: FieldValidationFunctionSync = fieldValidatorArgs => {
+  const {
+    value,
+    message = defaultMessage,
+    customArgs = defaultCustomArgs,
+  } = fieldValidatorArgs;
+
+  const args: CustomArgs = {
+    ...defaultCustomArgs,
+    ...customArgs,
+  };
+
+  const succeeded =
+    !isDefined(value) ||
+    (validateType(value) && validate(mapToModel(value, args)));
 
   return {
     succeeded,
     message: succeeded
       ? ''
-      : // TODO: Use if it has custom args
-        parseMessageWithCustomArgs(
-          (message as string) || defaultMessage,
-          customArgs
-        ),
+      : parseMessageWithCustomArgs(message as string, {
+          blackList: `"${args.blackList.join('", "')}"`,
+        }),
     type: VALIDATOR_TYPE,
   };
 };
