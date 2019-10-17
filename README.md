@@ -16,7 +16,7 @@ We have the following form model:
 
 ```
 const myFormValues = {
-  product : 'shoes',
+  product: 'shoes',
   price: 20,
 }
 ```
@@ -27,7 +27,9 @@ We can add a charsNotBlackList validation to the myFormValues
 import { charsNotBlackList } from '@lemoncode/fonk-chars-not-black-list-validator';
 
 const validationSchema = {
-  price: [charsNotBlackList.validator],
+  field: {
+    price: [charsNotBlackList.validator],
+  },
 };
 ```
 
@@ -47,12 +49,14 @@ charsNotBlackList.setErrorMessage('El campo debe de ser numérico');
 import { charsNotBlackList } from '@lemoncode/fonk-chars-not-black-list-validator';
 
 const validationSchema = {
-  price: [
-    {
-      validator: charsNotBlackList.validator,
-      message: 'Error message only updated for the validation schema',
-    },
-  ],
+  field: {
+    price: [
+      {
+        validator: charsNotBlackList.validator,
+        message: 'Error message only updated for the validation schema',
+      },
+    ],
+  },
 };
 ```
 
