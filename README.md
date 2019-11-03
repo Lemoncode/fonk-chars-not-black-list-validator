@@ -35,6 +35,7 @@ const validationSchema = {
   },
 };
 ```
+
 Some characters will need to be escaped on the blacklist because they are used in a RegExp.
 
 You can customize the error message displayed in two ways:

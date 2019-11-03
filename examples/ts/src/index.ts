@@ -1,7 +1,4 @@
-import {
-  ValidationSchema,
-  createFormValidation,
-} from '@lemoncode/fonk';
+import { ValidationSchema, createFormValidation } from '@lemoncode/fonk';
 import { charsNotBlackList } from '@lemoncode/fonk-chars-not-black-list-validator';
 
 const validationSchema: ValidationSchema = {
