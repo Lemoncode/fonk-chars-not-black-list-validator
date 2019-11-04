@@ -42,7 +42,23 @@ const validationSchema = {
 };
 ```
 
-Some characters will need to be escaped on the blacklist because they are used in a RegExp.
+Some characters will need to be escaped on the blacklist because they are used in a RegExp. 
+For example, if you want to include backslash (\\) or simple quote(') as blacklist characters you will need to escape them:
+
+```javascript
+import { charsNotBlackList } from '@lemoncode/fonk-chars-not-black-list-validator';
+
+const validationSchema = {
+  field: {
+    product: [
+      {
+        validator: charsNotBlackList.validator,
+        customArgs: { blackListChars: 'n\'w\\5' },
+      },
+    ],
+  },
+};
+```
 
 You can customize the error message displayed in two ways:
 
