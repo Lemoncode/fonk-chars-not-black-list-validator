@@ -3,27 +3,40 @@ import {
   parseMessageWithCustomArgs,
 } from '@lemoncode/fonk';
 
-// TODO: Add validator type
-const VALIDATOR_TYPE = '';
+const VALIDATOR_TYPE = 'CHARS_NOT_BLACK_LIST';
 
-// TODO: Add default message
-let defaultMessage = '';
-export const setErrorMessage = message => (defaultMessage = message);
+let defaultMessage = `The field can not contain the following characters: '{{blackListChars}}'`;
+export const setErrorMessage = (message: string) => (defaultMessage = message);
 
-const isDefined = value => value !== void 0 && value !== null && value !== '';
+const containsBlackListChars = (input: string, blackListChars: string) =>
+  new RegExp(`[${blackListChars}]+`, 'g').test(input);
 
-export const validator: FieldValidationFunctionSync = fieldValidatorArgs => {
+const isDefined = (value: string) =>
+  value !== void 0 && value !== null && value !== '';
+
+interface CustomValidatorArgs {
+  blackListChars: string;
+}
+
+const validateType = (value: string) => typeof value === 'string';
+
+export const validator: FieldValidationFunctionSync<
+  CustomValidatorArgs
+> = fieldValidatorArgs => {
   const { value, message = defaultMessage, customArgs } = fieldValidatorArgs;
+  const { blackListChars } = customArgs;
 
-  // TODO: Add validator
-  const succeeded = !isDefined(value) || ...;
+  const succeeded =
+    !isDefined(value) ||
+    (validateType(value) &&
+      validateType(blackListChars) &&
+      !containsBlackListChars(value, blackListChars));
 
   return {
     succeeded,
     message: succeeded
       ? ''
-      : // TODO: Use if it has custom args
-        parseMessageWithCustomArgs(
+      : parseMessageWithCustomArgs(
           (message as string) || defaultMessage,
           customArgs
         ),

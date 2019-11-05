@@ -1,28 +1,29 @@
-import {
-  ValidationSchema,
-  createFormValidation,
-} from '@lemoncode/fonk';
+import { ValidationSchema, createFormValidation } from '@lemoncode/fonk';
 import { charsNotBlackList } from '@lemoncode/fonk-chars-not-black-list-validator';
 
 const validationSchema: ValidationSchema = {
   field: {
-    myField: [charsNotBlackList.validator],
+    myField: [
+      {
+        validator: charsNotBlackList.validator,
+        customArgs: { blackListChars: 'nw5' },
+      },
+    ],
   },
 };
 
 const formValidation = createFormValidation(validationSchema);
 
-// TODO: Update example values 'test' and/or 10 if needed
 Promise.all([
-  formValidation.validateField('myField', 'test'),
-  formValidation.validateField('myField', 10),
+  formValidation.validateField('myField', 'My invalid test'),
+  formValidation.validateField('myField', 'My valid test'),
 ]).then(([failedResult, succeededResult]) => {
   document.getElementById('app').innerHTML = `
 <div style="flex-grow: 1;margin-left:2rem;">
   <h2>Example with failed result:</h2>
 
 <pre>
-  formValidation.validateField('myField', 'test')
+  formValidation.validateField('myField', 'My invalid test')
 </pre>
 
   <h3>Result: </h3>
@@ -35,7 +36,7 @@ ${JSON.stringify(failedResult, null, 2)}
   <h2>Example with succeeded result:</h2>
 
 <pre>
-formValidation.validateField('myField', 10)
+formValidation.validateField('myField', 'My valid test')
 </pre>
 
   <h3>Result: </h3>
