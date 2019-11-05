@@ -1,6 +1,6 @@
 {
   "name": "@lemoncode/fonk-chars-not-black-list-validator",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "This is a [fonk](https://github.com/Lemoncode/fonk) microlibrary that brings validation capabilities to validate if a field of a form only contains valid characters",
   "main": "dist/@lemoncode/fonk-chars-not-black-list-validator.cjs.js",
   "module": "dist/@lemoncode/fonk-chars-not-black-list-validator.esm.js",
